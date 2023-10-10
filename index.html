@@ -24,125 +24,127 @@
 
   
   <section class="code">
-    <li>
-    Sub PasteImageFrom()
-        Dim folderPath As String
-        Dim imageUrl As String
-        Dim imageName As String
-        Dim imageFullPath As String
-        Dim imageAspectX As Integer
-        Dim imageAspectY As Integer
-        Dim wsh As Object
-        
-        ' アスペクト比
-        imageAspectX = 1000
-        imageAspectY = 1000
-        
-        ' ダウンロードパス
-        Set wsh = CreateObject("WScript.Shell")
-        folderPath = wsh.SpecialFolders("Desktop") & "\ExcelGameData"
-        If Dir(folderPath, vbDirectory) = "" Then
-            MkDir folderPath
-        End If
-        Debug.Print folderPath
-        
-        ' ダウンロードする画像のURL
-        imageUrl = "https://picsum.photos/" & imageAspectX & "/" & imageAspectY ' 1000x600の画像（5セル分横、3セル分縦）
-        
-        ' 画像のファイル名
-        imageName = "LoremPicsumImage.jpg"
-        
-        ' 画像のフルパス
-        imageFullPath = folderPath & "\" & imageName
-        Debug.Print imageFullPath
-        
-        ' 画像をダウンロードして保存
-        DownloadImage imageUrl, imageFullPath
-        
-        ' セルA1に画像を貼り付け
-        PasteImageAspect imageFullPath, imageAspectX, imageAspectY
-    End Sub
-    
-    Sub DeleteImageFromCell()
-        ' Excelのセルに貼り付けた画像を削除
-        DeleteImage ThisWorkbook.Sheets(1).Range("B6")
-    End Sub
-    
-    '===コード===
-    '===コード===
-    '===コード===
-    
-    Sub DeleteImage(rng As Range)
-        ' シートを選択
-        Dim ws As Worksheet
-        Set ws = rng.Worksheet
-        
-        ' セルA1に貼り付けた画像を削除
-        Dim shape As shape
-        For Each shape In ws.Shapes
-            If shape.TopLeftCell.Address = rng.Address Then
-                shape.Delete
-                Exit For
-            End If
-        Next shape
-    End Sub
-    
-    Sub DownloadImage(url As String, savePath As String)
-        Dim http As Object
-        Set http = CreateObject("MSXML2.ServerXMLHTTP.6.0")
-        
-        ' HTTPリクエストを送信して画像をダウンロード
-        http.Open "GET", url, False
-        http.send
-        
-        ' 画像を保存
-        If http.Status = 200 Then
-            Dim stream As Object
-            Set stream = CreateObject("ADODB.Stream")
-            stream.Open
-            stream.Type = 1 'バイナリモード
-            stream.Write http.responseBody
-            stream.SaveToFile savePath, 2 '保存
-            stream.Close
-        End If
-    End Sub
-    
-    Sub PasteImageAspect(imageFullPath As String, imageAspectX As Integer, imageAspectY As Integer)
-        Dim ws As Worksheet
-        Dim rng As Range
-        Dim shape As shape
-        Dim width As Integer
-        Dim height As Integer
-        
-        ' アスペクト比（セル）
-        width = imageAspectX / 200
-        height = imageAspectY / 200 * 3
-        
-        'シートを選択
-        Set ws = ThisWorkbook.Sheets(1) '1番目のシート
-        
-        'セルA1を選択
-        Set rng = ws.Range("B6")
-        
-        '画像を挿入
-        Set shape = ws.Shapes.AddPicture(imageFullPath, _
-            MsoTriState.msoFalse, MsoTriState.msoCTrue, _
-            rng.Left, rng.Top, width * rng.width, height * rng.height) ' 5セル分横、3セル分縦のサイズに調整
-        
-        '画像サイズをセルに合わせる
-        shape.LockAspectRatio = MsoTriState.msoCTrue
-        shape.width = width * rng.width
-        shape.height = height * rng.height
-    End Sub
-    </li>
-    <li>
-    Option Explicit
-    
-    Private Sub CommandButton1_Click()
-        Call Module1.DeleteImageFromCell
-        Call Module1.PasteImageFrom
-    End Sub
-    </li>
+    <ol>
+      <li>
+      Sub PasteImageFrom()
+          Dim folderPath As String
+          Dim imageUrl As String
+          Dim imageName As String
+          Dim imageFullPath As String
+          Dim imageAspectX As Integer
+          Dim imageAspectY As Integer
+          Dim wsh As Object
+          
+          ' アスペクト比
+          imageAspectX = 1000
+          imageAspectY = 1000
+          
+          ' ダウンロードパス
+          Set wsh = CreateObject("WScript.Shell")
+          folderPath = wsh.SpecialFolders("Desktop") & "\ExcelGameData"
+          If Dir(folderPath, vbDirectory) = "" Then
+              MkDir folderPath
+          End If
+          Debug.Print folderPath
+          
+          ' ダウンロードする画像のURL
+          imageUrl = "https://picsum.photos/" & imageAspectX & "/" & imageAspectY ' 1000x600の画像（5セル分横、3セル分縦）
+          
+          ' 画像のファイル名
+          imageName = "LoremPicsumImage.jpg"
+          
+          ' 画像のフルパス
+          imageFullPath = folderPath & "\" & imageName
+          Debug.Print imageFullPath
+          
+          ' 画像をダウンロードして保存
+          DownloadImage imageUrl, imageFullPath
+          
+          ' セルA1に画像を貼り付け
+          PasteImageAspect imageFullPath, imageAspectX, imageAspectY
+      End Sub
+      
+      Sub DeleteImageFromCell()
+          ' Excelのセルに貼り付けた画像を削除
+          DeleteImage ThisWorkbook.Sheets(1).Range("B6")
+      End Sub
+      
+      '===コード===
+      '===コード===
+      '===コード===
+      
+      Sub DeleteImage(rng As Range)
+          ' シートを選択
+          Dim ws As Worksheet
+          Set ws = rng.Worksheet
+          
+          ' セルA1に貼り付けた画像を削除
+          Dim shape As shape
+          For Each shape In ws.Shapes
+              If shape.TopLeftCell.Address = rng.Address Then
+                  shape.Delete
+                  Exit For
+              End If
+          Next shape
+      End Sub
+      
+      Sub DownloadImage(url As String, savePath As String)
+          Dim http As Object
+          Set http = CreateObject("MSXML2.ServerXMLHTTP.6.0")
+          
+          ' HTTPリクエストを送信して画像をダウンロード
+          http.Open "GET", url, False
+          http.send
+          
+          ' 画像を保存
+          If http.Status = 200 Then
+              Dim stream As Object
+              Set stream = CreateObject("ADODB.Stream")
+              stream.Open
+              stream.Type = 1 'バイナリモード
+              stream.Write http.responseBody
+              stream.SaveToFile savePath, 2 '保存
+              stream.Close
+          End If
+      End Sub
+      
+      Sub PasteImageAspect(imageFullPath As String, imageAspectX As Integer, imageAspectY As Integer)
+          Dim ws As Worksheet
+          Dim rng As Range
+          Dim shape As shape
+          Dim width As Integer
+          Dim height As Integer
+          
+          ' アスペクト比（セル）
+          width = imageAspectX / 200
+          height = imageAspectY / 200 * 3
+          
+          'シートを選択
+          Set ws = ThisWorkbook.Sheets(1) '1番目のシート
+          
+          'セルA1を選択
+          Set rng = ws.Range("B6")
+          
+          '画像を挿入
+          Set shape = ws.Shapes.AddPicture(imageFullPath, _
+              MsoTriState.msoFalse, MsoTriState.msoCTrue, _
+              rng.Left, rng.Top, width * rng.width, height * rng.height) ' 5セル分横、3セル分縦のサイズに調整
+          
+          '画像サイズをセルに合わせる
+          shape.LockAspectRatio = MsoTriState.msoCTrue
+          shape.width = width * rng.width
+          shape.height = height * rng.height
+      End Sub
+      </li>
+      <li>
+      Option Explicit
+      
+      Private Sub CommandButton1_Click()
+          Call Module1.DeleteImageFromCell
+          Call Module1.PasteImageFrom
+      End Sub
+      </li>
+    </ol>
   </section> 
 </body>
 
